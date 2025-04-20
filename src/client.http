@@ -1,0 +1,26 @@
+GET http://localhost:8080/notes/allNotes
+Accept: application/json
+
+###
+POST http://localhost:8080/notes
+Content-Type: application/json
+
+{
+  "title": "My new note 3",
+  "content": "This is a test content 3."
+}
+
+###
+
+PUT http://localhost:8080/notes/1
+Content-Type: application/json
+
+{
+  "title": "Updated title",
+  "content": "This is the updated content"
+}
+
+
+###
+
+DELETE http://localhost:8080/notes/1
