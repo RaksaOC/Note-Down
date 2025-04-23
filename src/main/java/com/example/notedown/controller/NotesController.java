@@ -26,8 +26,8 @@ public class NotesController {
 
     // getting a note by id
     @GetMapping("allNotes/{noteId}")
-    public Note getNote(@PathVariable Long noteId) {
-        return noteService.getNoteById(noteId);
+    public Note getNote(@PathVariable Long noteId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return noteService.getNoteById(noteId, userDetails.getUser());
     }
 
     // will save or add to the list for persistence
@@ -36,15 +36,14 @@ public class NotesController {
         return noteService.saveNote(note);
     }
 
-    //    @PutMapping("update/{id}") is this neccessary?
-    @PutMapping("/{id}")
-    public String updateNote(@PathVariable Long id, @RequestBody NoteDTO note) {
-        return noteService.updateNote(id, note);
+    @PutMapping("/{noteId}")
+    public String updateNote(@PathVariable Long noteId, @RequestBody NoteDTO note, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return noteService.updateNote(noteId, note, userDetails.getUser());
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteNote(@PathVariable Long id) {
-        return noteService.deleteNote(id);
+    @DeleteMapping("/{noteId}")
+    public String deleteNote(@PathVariable Long noteId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return noteService.deleteNote(noteId, userDetails.getUser());
     }
 
     @GetMapping("/allNotes/getNotesByTitle")

@@ -20,20 +20,24 @@ import java.util.List;
 @Service
 public class NoteService {
     private final NoteRepository noteRepository;
-    private final UserRepository userRepository;
 
     public NoteService(NoteRepository noteRepository, UserRepository userRepository) {
         this.noteRepository = noteRepository;
-        this.userRepository = userRepository;
     }
 
     public List<Note> getAllNotes(User user) {
         return noteRepository.findAllByUser(user).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public Note getNoteById(Long id) {
-        return noteRepository.findById(id)
+    public Note getNoteById(Long id, User user) {
+        Note note = noteRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note not found"));
+
+        if (!note.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: not your note");
+        }
+
+        return note;
     }
 
     public String saveNote(NoteDTO note) {
@@ -48,9 +52,13 @@ public class NoteService {
         return note.getContent() + " has been saved";
     }
 
-    public String updateNote(Long noteId, NoteDTO note) {
+    public String updateNote(Long noteId, NoteDTO note, User user) {
         Note noteToUpdate = noteRepository.findById(noteId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note not found"));
+
+        if (!noteToUpdate.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: not your note");
+        }
 
         noteToUpdate.setTitle(note.getTitle());
         noteToUpdate.setContent(note.getContent());
@@ -58,7 +66,13 @@ public class NoteService {
         return note.getContent() + " has been updated";
     }
 
-    public String deleteNote(Long noteId) {
+    public String deleteNote(Long noteId, User user) {
+        Note noteToUpdate = noteRepository.findById(noteId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note not found"));
+        if (!noteToUpdate.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: not your note");
+        }
+
         noteRepository.deleteById(noteId);
         return "Note with ID " + noteId + " has been deleted";
     }
@@ -67,10 +81,6 @@ public class NoteService {
         return noteRepository.findByTitle(title)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note with title not found"));
     }
-
-//    public List<Note> getNotesByUserId(Long userId) {
-//        return noteRepository.findByUserId(userId);
-//    }
 
     public List<Note> sortNotes(String sortType) {
         List<Note> notes = noteRepository.findAll();
