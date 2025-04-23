@@ -11,9 +11,9 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     private String title;
     private String content;
     private LocalDateTime createdAt;
@@ -38,15 +38,13 @@ public class Note {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // getters and setters
+    public User getUser() {
+        return user;
+    }
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Long getId() {
         return id;

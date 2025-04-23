@@ -5,9 +5,11 @@ import com.example.notedown.model.Note;
 import com.example.notedown.model.User;
 import com.example.notedown.repository.NoteRepository;
 import com.example.notedown.repository.UserRepository;
+import com.example.notedown.security.CustomUserDetails;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,8 +27,8 @@ public class NoteService {
         this.userRepository = userRepository;
     }
 
-    public List<Note> getAllNotes() {
-        return noteRepository.findAll();
+    public List<Note> getAllNotes(User user) {
+        return noteRepository.findAllByUser(user).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public Note getNoteById(Long id) {
@@ -36,9 +38,8 @@ public class NoteService {
 
     public String saveNote(NoteDTO note) {
         Note newNote = new Note();
-//        User user = userRepository.findById(note.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-//        newNote.setUser(user);
-        User user  = new User("as;dlkfj", "sdfsdfds");
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        newNote.setUser(userDetails.getUser());
         newNote.setTitle(note.getTitle());
         newNote.setContent(note.getContent());
         newNote.setCreatedAt(LocalDateTime.now());
@@ -47,8 +48,8 @@ public class NoteService {
         return note.getContent() + " has been saved";
     }
 
-    public String updateNote(Long id, NoteDTO note) {
-        Note noteToUpdate = noteRepository.findById(id)
+    public String updateNote(Long noteId, NoteDTO note) {
+        Note noteToUpdate = noteRepository.findById(noteId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note not found"));
 
         noteToUpdate.setTitle(note.getTitle());
@@ -57,12 +58,9 @@ public class NoteService {
         return note.getContent() + " has been updated";
     }
 
-    public String deleteNote(Long id) {
-        Note note = noteRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note not found"));
-
-        noteRepository.deleteById(id);
-        return "Note with ID " + id + " has been deleted";
+    public String deleteNote(Long noteId) {
+        noteRepository.deleteById(noteId);
+        return "Note with ID " + noteId + " has been deleted";
     }
 
     public Note getNoteByTitle(String title) {

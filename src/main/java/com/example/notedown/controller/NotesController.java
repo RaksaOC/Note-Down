@@ -2,8 +2,9 @@ package com.example.notedown.controller;
 
 import com.example.notedown.dto.NoteDTO;
 import com.example.notedown.model.Note;
+import com.example.notedown.security.CustomUserDetails;
 import com.example.notedown.service.NoteService;
-import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,14 +20,14 @@ public class NotesController {
 
     // just returns all nots
     @GetMapping("/allNotes")
-    public List<Note> allNotes() {
-        return noteService.getAllNotes();
+    public List<Note> allNotes(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return noteService.getAllNotes(userDetails.getUser());
     }
 
     // getting a note by id
-    @GetMapping("allNotes/{id}")
-    public Note getNote(@PathVariable Long id) {
-        return noteService.getNoteById(id);
+    @GetMapping("allNotes/{noteId}")
+    public Note getNote(@PathVariable Long noteId) {
+        return noteService.getNoteById(noteId);
     }
 
     // will save or add to the list for persistence

@@ -8,14 +8,14 @@ import java.util.List;
 @Table(name = "user")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
     private String password;
 
-//    @OneToMany(mappedBy = "user")
-//    private List<Note> notes;
+    @OneToMany(mappedBy = "user")
+    private List<Note> notes;
 
     public User() {
     }
@@ -39,5 +39,13 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
