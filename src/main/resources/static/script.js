@@ -8,6 +8,12 @@ const saveButton = document.querySelector("#save-button");
 const deleteButton = document.querySelector("#delete-button");
 const addButton = document.querySelector("#add-note");
 
+// authentication buttons
+
+// const logIn = document.querySelector("#log-in")
+const logOut = document.querySelector("#log-out")
+// const signUp = document.querySelector("#sign-up")
+
 function disableInputs() {
     noteTextBox.value = "";
     noteTitleBox.value = "";
@@ -15,6 +21,10 @@ function disableInputs() {
     noteTextBox.setAttribute("disabled", "disabled");
     saveButton.setAttribute("disabled", "disabled");
     deleteButton.setAttribute("disabled", "disabled");
+    noteTitleBox.style.opacity = "0.5";
+    noteTextBox.style.opacity = "0.5";
+    deleteButton.style.opacity = "0.5";
+    saveButton.style.opacity = "0.5";
 }
 
 function enableInputs(){

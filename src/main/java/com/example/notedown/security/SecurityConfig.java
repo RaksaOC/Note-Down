@@ -15,8 +15,21 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeHttpRequests().requestMatchers("/login", "/register").permitAll()
-                .anyRequest().authenticated().and().formLogin();
+        http.csrf()
+                    .disable()
+                    .authorizeHttpRequests()
+                    .requestMatchers("/login", "/register", "/login?logout")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+                .and()
+                    .formLogin()
+                .and()
+                    .logout()
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login")
+                    .invalidateHttpSession(true) // kills the session
+                    .deleteCookies("JSESSIONID"); // removes the cookie
         return http.build();
     }
 

@@ -25,9 +25,7 @@
         h1 {
             text-align: center;
             background-color: #f7f7f7;
-            padding: 1rem;
             margin: 0;
-            border-bottom: 1px solid #ddd;
         }
 
         .note-wrapper {
@@ -140,11 +138,57 @@
             cursor: not-allowed;
         }
 
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f7f7f7;
+            padding: 2rem 1rem ;
+            position: relative;
+            border-bottom: 1px solid #ddd;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .auth {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .auth a {
+            text-decoration: none;
+            color: #1f2937;
+            font-weight: 500;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .auth a:hover {
+            background-color: #e0e7ff;
+            color: #1d4ed8;
+        }
+
+
 
     </style>
 </head>
 <body>
+<header>
 <h1>NoteDown</h1>
+    <div class="auth">
+<!--        <a href="" id="log-in">Log In</a>-->
+<!--        <a href="" id="sign-up">Sign Up</a>-->
+        <form action="/logout" method="POST">
+            <button type="submit" id="log-out">Log out</button>
+        </form>
+
+    </div>
+</header>
 
 <div class="note-wrapper">
     <div class="note-visual">
