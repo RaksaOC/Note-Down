@@ -156,7 +156,7 @@
 
         .auth {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .auth a {
@@ -173,7 +173,51 @@
             color: #1d4ed8;
         }
 
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
 
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 300px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            margin: 0.5rem 0;
+            padding: 0.6rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-content button {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #888;
+        }
 
     </style>
 </head>
@@ -181,8 +225,8 @@
 <header>
 <h1>NoteDown</h1>
     <div class="auth">
-<!--        <a href="" id="log-in">Log In</a>-->
-<!--        <a href="" id="sign-up">Sign Up</a>-->
+        <button id="log-in">Log In</button>
+        <button id="sign-up">Sign Up</button>
         <form action="/logout" method="POST">
             <button type="submit" id="log-out">Log out</button>
         </form>
@@ -211,6 +255,33 @@
             <button id="delete-button" disabled>Delete</button>
         </div>
     </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" style="display: none;" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('login-modal').style.display='none'">&times;</span>
+            <h2>Log In</h2>
+            <form action="/login" method="POST">
+                <input type="text" name="username" placeholder="Username" required><br>
+                <input type="password" name="password" placeholder="Password" required><br>
+                <button type="submit">Log In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" style="display: none;" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('signup-modal').style.display='none'">&times;</span>
+            <h2>Sign Up</h2>
+            <form action="/signup" method="POST">
+                <input type="text" name="username" placeholder="Username" required><br>
+                <input type="password" name="password" placeholder="Password" required><br>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script src="script.js"></script>

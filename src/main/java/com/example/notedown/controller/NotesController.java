@@ -18,6 +18,16 @@ public class NotesController {
         this.noteService = noteService;
     }
 
+    @GetMapping("/")
+    public String index() {
+        return "forward:/index.html";
+    }
+
+    @GetMapping("/session")
+    public boolean checkSession(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return userDetails != null;
+    }
+
     // just returns all nots
     @GetMapping("/allNotes")
     public List<Note> allNotes(@AuthenticationPrincipal CustomUserDetails userDetails) {

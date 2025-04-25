@@ -10,9 +10,37 @@ const addButton = document.querySelector("#add-note");
 
 // authentication buttons
 
-// const logIn = document.querySelector("#log-in")
+const logIn = document.querySelector("#log-in")
 const logOut = document.querySelector("#log-out")
-// const signUp = document.querySelector("#sign-up")
+const signUp = document.querySelector("#sign-up")
+
+// modal
+
+const logInModal = document.querySelector("#login-modal");
+const signUpModal = document.querySelector("#signup-modal");
+
+async function isLoggedIn() {
+    try {
+        const res = await fetch('/notes/session');
+
+        return await res.json(); // returns true or false from backend method
+    } catch (err) {
+        console.error('Error checking session:', err);
+    }
+}
+
+async function configAuthButton() {
+    if (await isLoggedIn()) {
+        logIn.style.display = "none";
+        signUp.style.display = "none";
+        logOut.style.display = "flex";
+    } else {
+        logIn.style.display = "flex";
+        signUp.style.display = "flex";
+    }
+}
+
+configAuthButton();
 
 function disableInputs() {
     noteTextBox.value = "";
@@ -27,7 +55,7 @@ function disableInputs() {
     saveButton.style.opacity = "0.5";
 }
 
-function enableInputs(){
+function enableInputs() {
     noteTitleBox.removeAttribute("disabled");
     noteTextBox.removeAttribute("disabled");
     saveButton.removeAttribute("disabled");
@@ -114,9 +142,14 @@ async function allNotes() {
 allNotes();
 
 addButton.addEventListener("click", async () => {
-    await saveNote();
-    await reload();
-})
+    if (await isLoggedIn()) {
+        await saveNote();
+        await reload();
+    }
+    else{
+        logInModal.style.display = "flex";
+    }
+});
 
 function highlightNote(notes, noteElement) {
     // Remove highlight class from all children
@@ -140,3 +173,11 @@ function populateInputs(note) {
     noteTextBox.value = note.content;
     noteTitleBox.value = note.title;
 }
+
+logIn.addEventListener("click", () => {
+    logInModal.style.display = "flex";
+})
+
+signUp.addEventListener("click", () => {
+    signUpModal.style.display = "flex";
+})
